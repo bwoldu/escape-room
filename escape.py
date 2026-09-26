@@ -1,5 +1,125 @@
+def sea_level_check(sea_level):
+    if sea_level >= 100:
+        print("The island has been submerged. GAME OVER")
+        return True
+    return False
+    
+def lighthouse(sea_level : int, answers : list):
+    print("You have reached the lighthouse but the door is locked")
+    print("A screen on the door pops up:")
+
+    door_answer = int("".join(map(str, answers)))
+    while True:
+        try:
+            player_input = int(input("Enter the digits from each bridge sequence:"))
+        except ValueError:
+            print("Please enter a whole number")
+            continue 
+
+        if player_input == door_answer:
+            print("DOOR UNLOCKED")
+            print("You have now reached the last room")
+            return 
+        
+        sea_level +=10
+        print(f"INCORRECT SEA LEVEL NOW: {sea_level}%")
+
+        if sea_level_check(sea_level):
+            return 
+
+def room2_bridge(sea_level):
+    sequences = {"9,3,12,15, ?": 12,
+                 "answeer": 12,
+                 "put answer": 13
+                 }
+
+    answers = []
+    print("A screen at the first part of the bridge pops up with a sequence:")
+    for sequence, answer in sequences.items():
+        print(sequence)
+        while True:
+            try:
+                player_answer = int(input("What is the next answer?"))
+            except ValueError:
+                print("Please enter a number")
+
+            if player_answer != answer:
+                sea_level += 10
+                print(f"Incorrect! SEA LEVEL: {sea_level}%")
+
+                if sea_level_check(sea_level):
+                    return
+                continue 
+            else:
+                answers.append(player_answer)
+                break
+    lighthouse(sea_level, answers)
+
+
 def room2():
-    pass
+    print("You're now on an abandoned island. Water is slowly moving further inland. \n SEA LEVEL: 15%. You need to escape.")
+    print("Reach the lighthouse before the island is submerged")
+    sea_level = 15
+
+    start_paths = {"Beach Path": ["2m above sea level", 10],
+             "Forest Path": ["8m above seal level",15],
+             "Rocky Path": ["12m above seal level", 25], 
+             }
+
+    middle_paths = ["Hill path", "Bridge path", "River path"]
+
+    for i, value in enumerate(start_paths, start =1):
+        print(f"{i}: {value} - {start_paths[value][0]} - {start_paths[value][1]} minutes")
+
+    print("WARNING: There has been a landslide on the rocky path" \
+    "\n The evacuation point must be reached within 35 minutes")
+
+    while True:
+        try:
+            choice = int(input("Which path do you choose?"))
+
+            if choice == 2:
+                print("You take the Forest Path and continue further inland")
+                break
+            elif choice == 1 or choice == 3:
+                sea_level +=10
+                print(f"Incorrect: Sea level has now rose to {sea_level}%")
+
+            else:
+                print("Please choose a path from 1-3.")
+
+            if sea_level_check(sea_level):
+                return
+
+        except ValueError:
+            print("Please enter a number")
+            continue 
+
+
+    #second path challenge 
+    print("There are three more paths to choose from but they are all blocked")
+    print("A sign reads:")
+    print("To reveal the safe path answer this riddle:")
+    print("What grows bigger with each passing year, affecting weather across the sphere?")
+
+    for path in middle_paths:
+        print(path)
+
+    riddle_answer = "Climate Change"
+
+    while True:
+        user_answer = input("Answer:")
+        if user_answer.lower() == riddle_answer.lower():
+            print("The Bridge path opens")
+            room2_bridge(sea_level)
+            return 
+
+        sea_level += 10
+        print(f"Incorrect! SEA LEVEL: {sea_level}%")
+
+        if sea_level_check(sea_level):
+            return
+    
 
 def room1():
     objects = {"Painting": ["Portrait of a man", "1791 - 1872", "A small plaque underneath with the name: Samual Morse"],
@@ -31,8 +151,7 @@ def room1():
 
                         if code.lower() == "cool":
                             print("Access granted. Entering room 2...")
-                            room2()
-                            break
+                            return
                         else:
                             print("Access denied")
                     
@@ -54,7 +173,6 @@ def room1():
                         print(objects[value])
         except Exception as e:
             print(e)
-room1()
 
 def start_game():
     print("10:00  'Four rooms. One exit. ESCAPE'")
@@ -62,15 +180,12 @@ def start_game():
         start = input("Start? Yes/Y")
 
         if start.lower() == "y" or start.lower() == "yes":
-            print(room1())
+            room1()
+            room2()
+            room3()
             break
         elif start.lower() == "no" or start.lower() == "n":
             print("Stopping game")
             break
         else:
             print("Invalid input. Please enter Yes/Y or No/N")
-
-def room3():
-    pass 
-def room4():
-    pass
