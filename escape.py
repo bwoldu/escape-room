@@ -1,3 +1,6 @@
+import random 
+from rich import print 
+
 def sea_level_check(sea_level):
     if sea_level >= 100:
         print("The island has been submerged. GAME OVER")
@@ -5,51 +8,46 @@ def sea_level_check(sea_level):
     return False
 
 def room3(sea_level):
-    secret_word = "planet"
-
-    num_guess = 6
     print("You have reached the top of the lighthouse.")
     print("The door to end the game is locked.")
     print("A screen pops up with a word guessing game")
-    print("You have 6 guesses to guess the 6-letter secret word")
+    print("You have 6 guesses to guess the 5-letter secret word")
 
-    while num_guess > 0:
-        word = []
-        guess = input("Please input your guess:").lower()
-    
+    words = ["earth", "water"]
+    word = random.choice(words)
 
-        if len(guess) != len(secret_word):
-            print("Enter a 6 letter word")
+    for i in range(6):
+        print(f"Guess: {i+1}")
+        guess = input("Enter your guess").lower()
+
+        if len(guess) != 5:
+            print("The length of the word must be 5")
             continue
 
-        if guess == secret_word:
-            print("Correct!")
-            print("You escaped!!")
-            return 
+        if guess == word:
+            print("[bold white on green]Correct![/]")
+            print("Congratulations! You escaped!")
+            return
 
-        num_guess -=1
-        sea_level += 10
-
-        print("? = correct letter wrong position")
-        print("X = letter not in word")
-
-        for i in range(len(secret_word)):
-            if guess[i] == secret_word[i]:
-                word.append(guess[i])
-            elif guess[i] in secret_word:
-                word.append("?")
+        w = []
+        for j in range(len(word)):
+            if guess[j] == word[j]:
+                style = "bold white on green"
+            elif guess[j] in word:
+                style = "bold white on yellow"
             else:
-                word.append("X")
-
-        print(" ".join(guess.upper()))
-        print(" ".join(word))
-        print("Guesses remaining:", num_guess)
+                style = "bold white on grey"
+            w.append(f"[{style}] {guess[j].upper()} [/]")
+        print(" ".join(w))
+    
+        sea_level += 10
         print(f"SEA LEVEL: {sea_level}%")
 
         if sea_level_check(sea_level):
             return 
 
     print("You have run out of guesses")
+    print(f"The word was: {word}")
     print("GAME OVER")
     
 def lighthouse(sea_level : int, answers : list):
@@ -67,6 +65,7 @@ def lighthouse(sea_level : int, answers : list):
         if player_input == door_answer:
             print("DOOR UNLOCKED")
             print("You have now reached the last room")
+            print("\n")
             room3(sea_level)
             return 
         
@@ -75,8 +74,6 @@ def lighthouse(sea_level : int, answers : list):
 
         if sea_level_check(sea_level):
             return 
-
-
 
 def room2_bridge(sea_level):
     sequences = {
@@ -114,18 +111,17 @@ def room2():
     print("Reach the lighthouse before the island is submerged")
     sea_level = 15
 
-    start_paths = {"Beach Path": ["2m above sea level", 10],
-             "Forest Path": ["8m above sea level",15],
-             "Rocky Path": ["12m above sea level", 25], 
+    start_paths = {"Beach Path": "2m above sea level",
+             "Forest Path": "8m above sea level",
+             "Rocky Path": "12m above sea level", 
              }
 
     middle_paths = ["Hill path", "Bridge path", "River path"]
 
     for i, value in enumerate(start_paths, start =1):
-        print(f"{i}: {value} - {start_paths[value][0]} - {start_paths[value][1]} minutes")
+        print(f"{i}: {value} - {start_paths[value]}")
 
-    print("WARNING: There has been a landslide on the rocky path" \
-    "\n The evacuation point must be reached within 35 minutes")
+    print("WARNING: There has been a landslide on the rocky path")
 
     while True:
         try:
@@ -205,6 +201,7 @@ def room1():
 
                         if code.lower() == "cool":
                             print("Access granted. Entering room 2...")
+                            print("\n")
                             return
                         else:
                             print("Access denied")
@@ -235,6 +232,7 @@ def start_game():
 
         if start.lower() == "y" or start.lower() == "yes":
             room1()
+            print("\n")
             room2()
             break
         elif start.lower() == "no" or start.lower() == "n":
