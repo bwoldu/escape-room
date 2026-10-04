@@ -3,6 +3,54 @@ def sea_level_check(sea_level):
         print("The island has been submerged. GAME OVER")
         return True
     return False
+
+def room3(sea_level):
+    secret_word = "planet"
+
+    num_guess = 6
+    print("You have reached the top of the lighthouse.")
+    print("The door to end the game is locked.")
+    print("A screen pops up with a word guessing game")
+    print("You have 6 guesses to guess the 6-letter secret word")
+
+    while num_guess > 0:
+        word = []
+        guess = input("Please input your guess:").lower()
+    
+
+        if len(guess) != len(secret_word):
+            print("Enter a 6 letter word")
+            continue
+
+        if guess == secret_word:
+            print("Correct!")
+            print("You escaped!!")
+            return 
+
+        num_guess -=1
+        sea_level += 10
+
+        print("? = correct letter wrong position")
+        print("X = letter not in word")
+
+        for i in range(len(secret_word)):
+            if guess[i] == secret_word[i]:
+                word.append(guess[i])
+            elif guess[i] in secret_word:
+                word.append("?")
+            else:
+                word.append("X")
+
+        print(" ".join(guess.upper()))
+        print(" ".join(word))
+        print("Guesses remaining:", num_guess)
+        print(f"SEA LEVEL: {sea_level}%")
+
+        if sea_level_check(sea_level):
+            return 
+
+    print("You have run out of guesses")
+    print("GAME OVER")
     
 def lighthouse(sea_level : int, answers : list):
     print("You have reached the lighthouse but the door is locked")
@@ -19,6 +67,7 @@ def lighthouse(sea_level : int, answers : list):
         if player_input == door_answer:
             print("DOOR UNLOCKED")
             print("You have now reached the last room")
+            room3(sea_level)
             return 
         
         sea_level +=10
@@ -27,10 +76,13 @@ def lighthouse(sea_level : int, answers : list):
         if sea_level_check(sea_level):
             return 
 
+
+
 def room2_bridge(sea_level):
-    sequences = {"9,3,12,15, ?": 12,
-                 "answeer": 12,
-                 "put answer": 13
+    sequences = {
+                 "1,8,27, _ ": 64,
+                 "79, 95, _, 127": 111,
+                 "4,23, 60, 121, ?": 212,
                  }
 
     answers = []
@@ -42,6 +94,7 @@ def room2_bridge(sea_level):
                 player_answer = int(input("What is the next answer?"))
             except ValueError:
                 print("Please enter a number")
+                continue
 
             if player_answer != answer:
                 sea_level += 10
@@ -62,8 +115,8 @@ def room2():
     sea_level = 15
 
     start_paths = {"Beach Path": ["2m above sea level", 10],
-             "Forest Path": ["8m above seal level",15],
-             "Rocky Path": ["12m above seal level", 25], 
+             "Forest Path": ["8m above sea level",15],
+             "Rocky Path": ["12m above sea level", 25], 
              }
 
     middle_paths = ["Hill path", "Bridge path", "River path"]
@@ -83,7 +136,7 @@ def room2():
                 break
             elif choice == 1 or choice == 3:
                 sea_level +=10
-                print(f"Incorrect: Sea level has now rose to {sea_level}%")
+                print(f"Incorrect: Sea level has now risen to {sea_level}%")
 
             else:
                 print("Please choose a path from 1-3.")
@@ -120,12 +173,13 @@ def room2():
         if sea_level_check(sea_level):
             return
     
+    
 
 def room1():
-    objects = {"Painting": ["Portrait of a man", "1791 - 1872", "A small plaque underneath with the name: Samual Morse"],
-               "Table": {"A newspaper": "The newspaper is dated 1812", "Piece of paper": "-. -. --- ---. -..", "Thermometer": ""},
+    objects = {"Painting": ["Portrait of a man", "1791 - 1872", "A small plaque underneath with the name: Samuel Morse"],
+               "Table": {"A newspaper": "The newspaper is dated 1812", "Piece of paper": "-.-. --- ---. -..", "Thermometer": "24"},
                "Door": "----",
-               "Bookshelf": {"Weather Through the Ages": "Pages of unusual weather records. Several mention record-breaking temperatures.", "Harry Potter and the Cursed Child": "HP", "Cryptography & Secret Messages": "\nA = .- \n  B = -... \n C = -.-. \n L = .-.. \n T = -, O = --- \n, S = ...", "Great Inventors": "Collection of famous inventor. One page is bookmarked: Samual Morse - developer of the Morse coded system."}, 
+               "Bookshelf": {"Weather Through the Ages": "Pages of unusual weather records. Several mention record-breaking temperatures.", "Harry Potter and the Cursed Child": "HP", "Cryptography & Secret Messages": "\nA = .- \n  B = -... \n C = -.-. \n L = .-.. \n T = -, O = --- \n, S = ...", "Great Inventors": "Collection of famous inventor. One page is bookmarked: Samuel Morse - developer of the Morse code system."}, 
                "Clock": "4:13"
                }
  
@@ -175,17 +229,17 @@ def room1():
             print(e)
 
 def start_game():
-    print("10:00  'Four rooms. One exit. ESCAPE'")
+    print("10:00  'Three rooms. One exit. ESCAPE'")
     while True:
         start = input("Start? Yes/Y")
 
         if start.lower() == "y" or start.lower() == "yes":
             room1()
             room2()
-            room3()
             break
         elif start.lower() == "no" or start.lower() == "n":
             print("Stopping game")
             break
         else:
             print("Invalid input. Please enter Yes/Y or No/N")
+start_game()
